@@ -1,0 +1,411 @@
+<title>ChatMatrik en español</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: una columna pensada para el móvil; cada pantalla de la app es una sección con filas alemán → español */
+:root {
+  --bg: #f4f6f5;
+  --surface: #ffffff;
+  --fg: #162120;
+  --muted: #586664;
+  --line: #d6dedb;
+  --accent: #0c6a5e;
+  --accent-soft: #dcefea;
+  --mark: #f3c94f;
+  --mark-fg: #3a2c00;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --f-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1514; --surface: #172020; --fg: #e4ebe9; --muted: #98a5a2; --line: #2a3532;
+    --accent: #5cc8b3; --accent-soft: #163631; --mark: #e2b84a; --mark-fg: #241a00;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1514; --surface: #172020; --fg: #e4ebe9; --muted: #98a5a2; --line: #2a3532;
+  --accent: #5cc8b3; --accent-soft: #163631; --mark: #e2b84a; --mark-fg: #241a00;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 132px); }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg);
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+header.intro { padding-block: 28px 8px; display: grid; gap: 10px; }
+.chip-lang {
+  justify-self: start;
+  font-family: var(--f-display); font-weight: 700; font-size: 0.95rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  background: var(--mark); color: var(--mark-fg);
+  padding: 2px 10px; border-radius: 4px;
+}
+h1 {
+  font-family: var(--f-display); font-weight: 700;
+  font-size: clamp(2.2rem, 8vw, 3.2rem); line-height: 1; margin: 0;
+  text-wrap: balance;
+}
+.lede { margin: 0; color: var(--muted); max-width: 60ch; }
+
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg);
+  padding-block: 12px 10px;
+  border-bottom: 1px solid var(--line);
+  display: grid; gap: 10px;
+}
+.search { position: relative; }
+.search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: var(--muted); stroke-width: 2; }
+#q {
+  width: 100%; font: inherit; color: var(--fg);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 12px 10px 38px;
+}
+#q:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+nav.jump { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+nav.jump::-webkit-scrollbar { display: none; }
+nav.jump a {
+  flex: none; text-decoration: none; color: var(--accent);
+  background: var(--accent-soft); border-radius: 999px;
+  padding: 4px 12px; font-size: 0.875rem; font-weight: 700;
+}
+nav.jump a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+main { display: grid; gap: 36px; padding-block: 24px 40px; }
+section { display: grid; gap: 4px; }
+.sec-head { display: grid; gap: 2px; margin-bottom: 6px; }
+h2 {
+  font-family: var(--f-display); font-weight: 700; font-size: 1.6rem;
+  letter-spacing: 0.02em; margin: 0; line-height: 1.1; text-wrap: balance;
+}
+.screen { margin: 0; font-size: 0.875rem; color: var(--muted); }
+.screen b { font-weight: 700; color: var(--fg); }
+h3 {
+  font-size: 0.75rem; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--muted); margin: 14px 0 0; font-weight: 700;
+}
+.cols {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px;
+  font-size: 0.75rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);
+  font-weight: 700; padding-bottom: 4px;
+}
+
+.row {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2px 16px; padding-block: 10px; border-top: 1px solid var(--line);
+}
+.de { color: var(--muted); overflow-wrap: anywhere; }
+.es { font-weight: 700; overflow-wrap: anywhere; }
+.note { grid-column: 1 / -1; margin: 0; font-size: 0.875rem; color: var(--muted); max-width: 62ch; }
+.mono { font-family: var(--f-mono); font-size: 0.875em; }
+.pill {
+  display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; border-radius: 50%;
+  color: #fff; font-size: 0.8rem; font-weight: 700; vertical-align: -0.2em; margin-right: 6px;
+}
+.pill.f { background: #3b3399; }
+.pill.d { background: #5a9a32; }
+.swatch { display: inline-block; width: 1.6em; height: 0.55em; border-radius: 2px; margin-right: 8px; vertical-align: 0.15em; }
+.swatch.f { background: #3b3399; }
+.swatch.d { background: #5a9a32; }
+
+.callout {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; display: grid; gap: 6px;
+}
+.callout p { margin: 0; }
+.callout .t { font-weight: 700; }
+
+.days {
+  display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-top: 6px;
+}
+.day {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 8px 4px; text-align: center; display: grid; gap: 2px;
+}
+.day .g { color: var(--muted); font-size: 0.875rem; }
+.day .s { font-weight: 700; font-size: 1.05rem; }
+.day .w { font-size: 0.7rem; color: var(--muted); }
+.day.trap { border-color: var(--mark); box-shadow: inset 0 0 0 1px var(--mark); }
+
+.empty { color: var(--muted); padding-block: 8px; }
+footer { padding-block: 0 40px; color: var(--muted); font-size: 0.875rem; display: grid; gap: 6px; }
+footer p { margin: 0; max-width: 62ch; }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <span class="chip-lang">DE → ES</span>
+    <h1>ChatMatrik en español</h1>
+    <p class="lede">Todos los textos de la app, pantalla por pantalla, con lo que significan de verdad para quien conduce. Incluye cómo leer el parte de actividad mensual en PDF.</p>
+  </header>
+
+  <div class="bar">
+    <label class="search" for="q">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+      <input id="q" type="search" placeholder="Busca una palabra, p. ej. Urlaub" autocomplete="off" aria-label="Buscar una palabra en alemán o en español">
+    </label>
+    <nav class="jump" aria-label="Secciones">
+      <a href="#menu">Menú</a>
+      <a href="#cuadrante">Cuadrante</a>
+      <a href="#calendario">Calendario</a>
+      <a href="#dias">Días y meses</a>
+      <a href="#ausencias">Ausencias</a>
+      <a href="#partes">Partes</a>
+      <a href="#pdf">El PDF mensual</a>
+      <a href="#vehiculos">Vehículos</a>
+    </nav>
+  </div>
+
+  <main>
+    <p class="empty" id="empty" hidden></p>
+
+    <section id="menu" data-sec>
+      <div class="sec-head">
+        <h2>Menú lateral y barra inferior</h2>
+        <p class="screen">Lo que ves al tocar <b>☰</b> y abajo del todo.</p>
+      </div>
+      <div class="cols"><span>En la app</span><span>En español</span></div>
+      <div class="row"><span class="de">Hallo …!</span><span class="es">¡Hola, …!</span></div>
+      <div class="row"><span class="de">Dienstplan</span><span class="es">Cuadrante</span><p class="note">Tu plan de servicios: qué servicio te toca cada día y qué días libras.</p></div>
+      <div class="row"><span class="de">Abwesenheit</span><span class="es">Ausencias</span><p class="note">Desde aquí pides vacaciones, días libres o compensación de horas.</p></div>
+      <div class="row"><span class="de">Dienstbörse</span><span class="es">Bolsa de servicios</span><p class="note">Literalmente «bolsa» como en bolsa de valores: donde se ofrecen y se cambian servicios entre compañeros.</p></div>
+      <div class="row"><span class="de">Tätigkeitsnachweise</span><span class="es">Partes de actividad</span><p class="note">Los resúmenes mensuales de horas, dietas y pluses en PDF.</p></div>
+      <div class="row"><span class="de">Schadensmeldung</span><span class="es">Parte de daños</span><p class="note">Para avisar de un golpe o un desperfecto en un vehículo.</p></div>
+      <div class="row"><span class="de">Einstellungen</span><span class="es">Ajustes</span></div>
+      <div class="row"><span class="de">Benutzerhilfe</span><span class="es">Ayuda</span><p class="note">El manual de usuario de la app.</p></div>
+      <div class="row"><span class="de">Abmelden</span><span class="es">Cerrar sesión</span></div>
+      <div class="row"><span class="de">ChatMatrik Version: 1.2.25</span><span class="es">ChatMatrik, versión 1.2.25</span></div>
+
+      <h3>Barra inferior</h3>
+      <div class="row"><span class="de">Dienstplan</span><span class="es">Cuadrante</span></div>
+      <div class="row"><span class="de">Nachrichten</span><span class="es">Mensajes</span></div>
+      <div class="row"><span class="de">Schwarzes Brett</span><span class="es">Tablón de anuncios</span><p class="note">Literalmente «pizarra negra». Son los avisos de la empresa para toda la plantilla.</p></div>
+    </section>
+
+    <section id="cuadrante" data-sec>
+      <div class="sec-head">
+        <h2>Cuadrante</h2>
+        <p class="screen">Pantalla <b>Dienstplan</b>, la que se abre al entrar.</p>
+      </div>
+      <div class="cols"><span>En la app</span><span>En español</span></div>
+      <div class="row"><span class="de">Woche 44</span><span class="es">Semana 44</span></div>
+      <div class="row"><span class="de"><span class="pill f">F</span>Frei</span><span class="es">Libre</span><p class="note">El círculo morado con la F marca un día sin servicio.</p></div>
+      <div class="row"><span class="de"><span class="pill d">D</span>Dienst</span><span class="es">Servicio</span><p class="note">El círculo verde con la D marca un día en que trabajas.</p></div>
+      <div class="row"><span class="de">Dienstfrei</span><span class="es">Día libre</span></div>
+      <div class="row"><span class="de">Dienst 1028</span><span class="es">Servicio 1028</span><p class="note">El número de servicio que te han asignado ese día.</p></div>
+      <div class="row"><span class="de mono">06:58</span><span class="es">Hora y lugar de inicio</span><p class="note">La primera hora es cuándo y dónde empiezas el servicio.</p></div>
+      <div class="row"><span class="de mono">16:50</span><span class="es">Hora y lugar de fin</span><p class="note">La segunda hora es cuándo y dónde lo terminas.</p></div>
+      <div class="row"><span class="de">Depot</span><span class="es">Cocheras</span></div>
+      <div class="row"><span class="de">Schule</span><span class="es">Colegio (servicio escolar)</span></div>
+      <div class="row"><span class="de mono">01_Mo,Die,Do Schule</span><span class="es">Servicio escolar de lunes, martes y jueves</span><p class="note">Es el nombre que pone la empresa al servicio. «Die» es una abreviatura de Dienstag (martes).</p></div>
+      <div class="row"><span class="de mono">03_Mi Schule</span><span class="es">Servicio escolar de los miércoles</span></div>
+
+      <h3>Iconos de arriba</h3>
+      <div class="row"><span class="de">📅 (Kalender)</span><span class="es">Abrir el calendario</span></div>
+      <div class="row"><span class="de">↻ (Aktualisieren)</span><span class="es">Actualizar</span></div>
+    </section>
+
+    <section id="calendario" data-sec>
+      <div class="sec-head">
+        <h2>Calendario</h2>
+        <p class="screen">Pantalla <b>Kalender</b>, desde el icono 📅 del cuadrante.</p>
+      </div>
+      <div class="cols"><span>En la app</span><span>En español</span></div>
+      <div class="row"><span class="de">Kalender</span><span class="es">Calendario</span></div>
+      <div class="row"><span class="de">Oktober 2026</span><span class="es">octubre de 2026</span><p class="note">En español los meses van en minúscula.</p></div>
+      <div class="row"><span class="de"><span class="swatch d"></span>Barra verde</span><span class="es">Día con servicio</span></div>
+      <div class="row"><span class="de"><span class="swatch f"></span>Barra morada</span><span class="es">Día libre</span></div>
+      <div class="row"><span class="de">Número dentro de un círculo</span><span class="es">Hoy</span></div>
+    </section>
+
+    <section id="dias" data-sec>
+      <div class="sec-head">
+        <h2>Días y meses</h2>
+        <p class="screen">Salen en el cuadrante, el calendario y los PDF.</p>
+      </div>
+      <div class="callout">
+        <p class="t">Cuidado con «Do»</p>
+        <p>En alemán <b>Do</b> es jueves (Donnerstag), no domingo. El domingo es <b>So</b> (Sonntag).</p>
+      </div>
+      <div class="days" aria-label="Días de la semana">
+        <div class="day"><span class="g">Mo</span><span class="s">L</span><span class="w">lunes</span></div>
+        <div class="day"><span class="g">Di</span><span class="s">M</span><span class="w">martes</span></div>
+        <div class="day"><span class="g">Mi</span><span class="s">X</span><span class="w">miérc.</span></div>
+        <div class="day trap"><span class="g">Do</span><span class="s">J</span><span class="w">jueves</span></div>
+        <div class="day"><span class="g">Fr</span><span class="s">V</span><span class="w">viernes</span></div>
+        <div class="day"><span class="g">Sa</span><span class="s">S</span><span class="w">sábado</span></div>
+        <div class="day trap"><span class="g">So</span><span class="s">D</span><span class="w">domingo</span></div>
+      </div>
+      <h3>Meses que aparecen en la app</h3>
+      <div class="row"><span class="de">Juli</span><span class="es">julio</span></div>
+      <div class="row"><span class="de">August</span><span class="es">agosto</span></div>
+      <div class="row"><span class="de">September</span><span class="es">septiembre</span></div>
+      <div class="row"><span class="de">Oktober</span><span class="es">octubre</span></div>
+      <div class="row"><span class="de">November</span><span class="es">noviembre</span></div>
+      <div class="row"><span class="de">Dezember</span><span class="es">diciembre</span></div>
+    </section>
+
+    <section id="ausencias" data-sec>
+      <div class="sec-head">
+        <h2>Solicitud de ausencia</h2>
+        <p class="screen">Pantalla <b>Freistellungswunsch</b>, desde «Abwesenheit» en el menú.</p>
+      </div>
+      <div class="cols"><span>En la app</span><span>En español</span></div>
+      <div class="row"><span class="de">Freistellungswunsch</span><span class="es">Solicitud de ausencia</span><p class="note">Literalmente «deseo de que te liberen del servicio».</p></div>
+      <div class="row"><span class="de">Antrag</span><span class="es">Solicitud</span></div>
+      <div class="row"><span class="de">Abwesenheitart</span><span class="es">Tipo de ausencia</span><p class="note">En alemán correcto sería «Abwesenheitsart». A la app le falta una s.</p></div>
+      <div class="row"><span class="de">Urlaub</span><span class="es">Vacaciones</span></div>
+      <div class="row"><span class="de">Dienstfrei</span><span class="es">Día libre</span></div>
+      <div class="row"><span class="de">Zeitausgleich</span><span class="es">Compensación de horas</span><p class="note">Librar a cambio de horas de más que ya tienes acumuladas.</p></div>
+      <div class="row"><span class="de">Start</span><span class="es">Fecha de inicio</span></div>
+      <div class="row"><span class="de">Ende</span><span class="es">Fecha de fin</span></div>
+      <div class="row"><span class="de">Notiz</span><span class="es">Observaciones</span></div>
+      <div class="row"><span class="de">➤ (botón azul)</span><span class="es">Enviar</span></div>
+    </section>
+
+    <section id="partes" data-sec>
+      <div class="sec-head">
+        <h2>Partes de actividad</h2>
+        <p class="screen">Pantalla <b>Tätigkeitsnachweise</b>.</p>
+      </div>
+      <div class="cols"><span>En la app</span><span>En español</span></div>
+      <div class="row"><span class="de">Tätigkeitsnachweise</span><span class="es">Partes de actividad</span></div>
+      <div class="row"><span class="de mono">Taetigkeitsnachweis_Juli_2026.pdf</span><span class="es">Parte de actividad de julio de 2026</span><p class="note">«ae» es la forma de escribir «ä» sin diéresis; por eso el archivo pone Taetigkeit.</p></div>
+    </section>
+
+    <section id="pdf" data-sec>
+      <div class="sec-head">
+        <h2>Cómo leer el PDF mensual</h2>
+        <p class="screen">Lo que ves al abrir un <b>Tätigkeitsnachweis</b>.</p>
+      </div>
+
+      <h3>Cabecera</h3>
+      <div class="row"><span class="de">Betriebsstätte</span><span class="es">Centro de trabajo</span></div>
+      <div class="row"><span class="de">Número grande arriba</span><span class="es">Tu número de personal</span><p class="note">El título sigue el orden centro_mes año_número_apellidos nombre.</p></div>
+
+      <h3>Columnas de la tabla</h3>
+      <div class="row"><span class="de">Lohnzeit</span><span class="es">Horas retribuidas</span><p class="note">Las horas que te pagan ese día.</p></div>
+      <div class="row"><span class="de">Spesen 1 / Spesen 2</span><span class="es">Dietas 1 / Dietas 2</span><p class="note">Dos tipos de dieta. Cada día de servicio cuenta en una de las dos columnas.</p></div>
+      <div class="row"><span class="de">Nacht</span><span class="es">Horas nocturnas</span></div>
+      <div class="row"><span class="de">Sonntag</span><span class="es">Horas en domingo</span></div>
+      <div class="row"><span class="de">Feiertag</span><span class="es">Horas en festivo</span></div>
+      <div class="row"><span class="de">Krank</span><span class="es">Baja por enfermedad</span></div>
+      <div class="row"><span class="de">Urlaub</span><span class="es">Vacaciones</span></div>
+
+      <h3>Filas</h3>
+      <div class="row"><span class="de mono">1032 , 06:55-16:45</span><span class="es">Servicio 1032, de 06:55 a 16:45</span></div>
+      <div class="row"><span class="de">Dienstfrei</span><span class="es">Libre</span></div>
+      <div class="row"><span class="de">Summe</span><span class="es">Total</span></div>
+
+      <h3>Movimientos de la bolsa de horas</h3>
+      <div class="row"><span class="de">Buchungen</span><span class="es">Movimientos</span></div>
+      <div class="row"><span class="de">ZA (Zeitausgleich)</span><span class="es">Bolsa de horas</span></div>
+      <div class="row"><span class="de">Stand alt</span><span class="es">Saldo anterior</span></div>
+      <div class="row"><span class="de">Abschluss September 2026</span><span class="es">Cierre de septiembre de 2026</span></div>
+      <div class="row"><span class="de">Gesamt</span><span class="es">Total</span></div>
+      <div class="row"><span class="de">Stand neu 01.10.2026</span><span class="es">Saldo nuevo a 01/10/2026</span></div>
+
+      <h3>Resumen final</h3>
+      <div class="row"><span class="de">Übersicht zur Entgeltbescheinigung</span><span class="es">Resumen para la nómina</span></div>
+      <div class="row"><span class="de">Urlaub Vormonat</span><span class="es">Vacaciones que quedaban el mes anterior</span></div>
+      <div class="row"><span class="de">Urlaub genommen</span><span class="es">Vacaciones disfrutadas</span></div>
+      <div class="row"><span class="de">Urlaub Aktuell</span><span class="es">Vacaciones pendientes</span></div>
+      <div class="row"><span class="de">Tage</span><span class="es">días</span></div>
+      <div class="row"><span class="de">Sollzeit</span><span class="es">Jornada teórica</span><p class="note">Las horas que te tocaba trabajar ese mes según contrato.</p></div>
+      <div class="row"><span class="de">Überstunden Auszahlung</span><span class="es">Horas extra pagadas</span></div>
+      <div class="row"><span class="de">Auszahlung gesamt</span><span class="es">Total de horas a pagar</span></div>
+      <div class="row"><span class="de">Nachtzuschlag</span><span class="es">Plus de nocturnidad</span></div>
+      <div class="row"><span class="de">Sonntagszuschlag</span><span class="es">Plus de domingo</span></div>
+      <div class="row"><span class="de">Feiertagszuschlag</span><span class="es">Plus de festivo</span></div>
+      <div class="row"><span class="de">Stundenkonto Vormonat</span><span class="es">Bolsa de horas del mes anterior</span></div>
+      <div class="row"><span class="de">Überstunden +-</span><span class="es">Horas de más o de menos este mes</span></div>
+      <div class="row"><span class="de">Überstunden Aktuell</span><span class="es">Saldo actual de horas</span></div>
+    </section>
+
+    <section id="vehiculos" data-sec>
+      <div class="sec-head">
+        <h2>Vehículos</h2>
+        <p class="screen">Pantalla <b>Fahrzeuge</b>.</p>
+      </div>
+      <div class="cols"><span>En la app</span><span>En español</span></div>
+      <div class="row"><span class="de">Fahrzeuge</span><span class="es">Vehículos</span></div>
+      <div class="row"><span class="de">Kennzeichensuche</span><span class="es">Buscar por matrícula</span></div>
+      <div class="row"><span class="de mono">SIM SR 791</span><span class="es">Matrícula del autobús</span><p class="note">Las matrículas no se traducen.</p></div>
+    </section>
+
+    <div class="callout">
+      <p class="t">Lo que se queda en alemán</p>
+      <p>Los nombres de cocheras y paradas (por ejemplo «Depot Dörth Römer»), los nombres de los servicios y las matrículas vienen del sistema de la empresa. Son nombres propios, así que no se traducen.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Guía no oficial, hecha a partir de capturas de pantalla de ChatMatrik 1.2.25. No traduce la app en sí: es una chuleta para entender cada pantalla.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var q = document.getElementById('q');
+  var empty = document.getElementById('empty');
+  var sections = Array.prototype.slice.call(document.querySelectorAll('[data-sec]'));
+  var extras = Array.prototype.slice.call(document.querySelectorAll('main > .callout'));
+
+  function strip(t) { return t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+  // Guarda dos versiones para que «Tätigkeit», «Tatigkeit» y «Taetigkeit» encuentren lo mismo
+  function variants(s) {
+    var umlaut = s.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+    return strip(s) + ' | ' + strip(umlaut);
+  }
+
+  sections.forEach(function (sec) {
+    sec.querySelectorAll('.row, .day').forEach(function (el) {
+      el.dataset.text = variants(el.textContent);
+    });
+  });
+
+  function run() {
+    var term = strip(q.value.trim().replace(/\s+/g, ' '));
+    var any = false;
+    sections.forEach(function (sec) {
+      var hits = 0;
+      sec.querySelectorAll('.row, .day').forEach(function (el) {
+        var show = !term || el.dataset.text.indexOf(term) !== -1;
+        el.hidden = !show;
+        if (show) hits++;
+      });
+      sec.querySelectorAll('h3, .callout, .cols').forEach(function (el) { el.hidden = !!term; });
+      sec.hidden = !!term && hits === 0;
+      if (!sec.hidden) any = true;
+    });
+    extras.forEach(function (el) { el.hidden = !!term; });
+    empty.hidden = any;
+    if (!any) empty.textContent = 'Ninguna palabra coincide con «' + q.value.trim() + '». Prueba con otra o borra la búsqueda.';
+  }
+
+  q.addEventListener('input', run);
+})();
+</script>
