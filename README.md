@@ -61,3 +61,22 @@ La idea que demuestra este prototipo es que la app oficial podría ofrecer **var
 - Añadir un idioma nuevo (polaco, rumano, turco…) consiste en copiar el bloque `es` de `i18n.js` y traducir los valores.
 - Fechas, meses y números se formatean según el idioma con `Intl`, sin traducirlos a mano.
 - `data.js` es donde se conectaría la API real del sistema de planificación.
+
+---
+
+# Mis inversiones
+
+En la carpeta [`inversiones/`](inversiones/) hay otra app, independiente de MiTurno, para **apuntar todas tus inversiones** y ver cuánto ganas o pierdes. Se instala igual en el iPhone, desde `https://moxetas.github.io/App-Scherer/inversiones/`.
+
+| Apartado | Qué permite |
+| --- | --- |
+| Resumen | Valor total de la cartera, ganancia o pérdida en euros y en %, dinero aportado y retirado, dividendos cobrados, reparto por tipo y por plataforma. |
+| Inversiones | Lista de inversiones con su valor y rentabilidad. Al tocar una se ven participaciones, precio medio de compra, ganancia sin vender y ya vendida, y sus movimientos. |
+| Movimientos | Todas las compras, ventas y dividendos por meses, con totales por año. |
+| Ajustes | Moneda, copia de seguridad (guardar y recuperar), exportar a Excel (CSV) y borrar todo. |
+
+- Cada inversión se apunta de una de dos formas: **por participaciones** (acciones, ETF, fondos, cripto, planes de pensiones: cantidad × precio) o **solo por importe** (depósitos, cuentas, inmuebles: euros aportados y valor actual).
+- Los precios se actualizan a mano con **Actualizar precio**. Al apuntar una compra o venta, su precio pasa a ser el precio actual. El resumen avisa si hay precios sin actualizar desde hace más de 30 días.
+- La ganancia total es: valor actual + dinero retirado + dividendos − dinero aportado (las comisiones cuentan). El precio medio usa el método de coste medio.
+- Los datos se guardan **solo en el teléfono**. Conviene hacer una copia de seguridad de vez en cuando desde Ajustes.
+- Para probarla sin apuntar nada, en la pantalla inicial está **Probar con datos de ejemplo**.
