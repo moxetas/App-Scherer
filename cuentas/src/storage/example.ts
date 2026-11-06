@@ -35,7 +35,7 @@ export function exampleData(year: number, today: string): AppData {
   const accounts = [
     { name: 'Cuenta del día a día', initial: 1450 },
     { name: 'Ahorro', initial: 4200 },
-    { name: 'Hucha de vacaciones', initial: 300 },
+    { name: 'Hucha de vacaciones', initial: 400 },
   ];
 
   const items: Item[] = [
@@ -57,7 +57,7 @@ export function exampleData(year: number, today: string): AppData {
     { date: y('01-20'), concept: 'Seguro del coche', amount: 410, account: 0, estimated: false },
     { date: y('03-05'), concept: 'Impuesto del coche', amount: 95, account: 0, estimated: false },
     { date: y('04-15'), concept: 'Revisión del coche', amount: 180, account: 0, estimated: true },
-    { date: y('08-05'), concept: 'Viaje de verano', amount: 1100, account: 2, estimated: true },
+    { date: y('08-05'), concept: 'Viaje de verano', amount: 980, account: 2, estimated: true },
     { date: y('09-10'), concept: 'Curso de idiomas', amount: 220, account: 0, estimated: false },
     { date: y('10-15'), concept: 'Seguro de hogar', amount: 190, account: 0, estimated: false },
     { date: y('12-15'), concept: 'Regalos de Navidad', amount: 300, account: 0, estimated: true },

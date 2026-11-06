@@ -61,3 +61,9 @@ La idea que demuestra este prototipo es que la app oficial podría ofrecer **var
 - Añadir un idioma nuevo (polaco, rumano, turco…) consiste en copiar el bloque `es` de `i18n.js` y traducir los valores.
 - Fechas, meses y números se formatean según el idioma con `Intl`, sin traducirlos a mano.
 - `data.js` es donde se conectaría la API real del sistema de planificación.
+
+## Cuentas del mes
+
+En la carpeta [`cuentas/`](cuentas/) está **Cuentas del mes**, una app instalable para llevar las cuentas del mes (qué entra, qué sale y a dónde va cada euro). Cada persona que abre el enlace ve solo sus propios datos, que se guardan en su teléfono. Tiene su propio [README](cuentas/README.md).
+
+Se publica con GitHub Actions en `https://moxetas.github.io/App-Scherer/cuentas/`. Para eso, en **Settings → Pages → Build and deployment → Source** hay que elegir **GitHub Actions** (en lugar de *Deploy from a branch*). El flujo publica MiTurno en la raíz igual que ahora y añade la app de cuentas en `/cuentas/`.
