@@ -63,7 +63,7 @@ export function mountApp(root: HTMLElement, store: Store): void {
   const header = h(
     'header',
     { class: 'topbar' },
-    h('a', { href: '#/resumen', class: 'brand' }, h('span', { class: 'brand-mark', 'aria-hidden': 'true' }), t('app.name')),
+    h('a', { href: '#/resumen', class: 'brand' }, h('img', { class: 'brand-logo', src: 'icons/icon-192.png', alt: '', width: 32, height: 32 }), t('app.name')),
     h('span', { class: 'topbar-year', id: 'topbar-year' }),
   );
 

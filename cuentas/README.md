@@ -101,6 +101,7 @@ Vite + TypeScript, sin framework ni librerías en tiempo de ejecución (unos 25 
 | `src/i18n/` | Textos (`es.ts`) y formato de cifras y fechas con `Intl`. Para añadir un idioma, copia `es.ts`, tradúcelo y regístralo en `index.ts`. |
 | `src/styles/` | Estilos con tokens de color para tema claro y oscuro. |
 | `public/` | `manifest.webmanifest` e iconos. |
+| `design/` | Logo original y el script que genera los iconos (`python3 design/make-icons.py`). |
 | `build/` | Plugins de Vite: genera `sw.js` (copia sin conexión con versión por contenido) y añade la política de seguridad. |
 | `tests/` | Pruebas del motor, de los cambios, de la lectura de importes y de la copia de seguridad. |
 

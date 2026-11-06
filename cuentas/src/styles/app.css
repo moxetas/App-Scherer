@@ -252,15 +252,10 @@ textarea {
   color: var(--ink);
   text-decoration: none;
 }
-.brand-mark {
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
-  background:
-    linear-gradient(var(--accent-ink), var(--accent-ink)) 6px 15px / 3px 6px no-repeat,
-    linear-gradient(var(--accent-ink), var(--accent-ink)) 11.5px 10px / 3px 11px no-repeat,
-    linear-gradient(var(--accent-ink), var(--accent-ink)) 17px 6px / 3px 15px no-repeat,
-    var(--accent);
+.brand-logo {
+  display: block;
+  width: 32px;
+  height: 32px;
 }
 .topbar-year {
   font-family: var(--font-mono);
