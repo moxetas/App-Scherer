@@ -63,6 +63,10 @@ button { cursor: pointer; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .ic { width: 24px; height: 24px; fill: currentColor; flex: none; }
+[dir="rtl"] .ic.mirror { transform: scaleX(-1); }
+
+/* La escritura árabe va unida: el espaciado entre letras la rompería */
+:lang(ar) * { letter-spacing: normal !important; }
 
 /* ---------- Barra superior ---------- */
 
@@ -160,13 +164,13 @@ main:focus { outline: none; }
 
 .lines {
   display: grid;
-  grid-template-columns: 5.6em minmax(0, 1fr);
+  grid-template-columns: minmax(5.6em, max-content) minmax(0, 1fr);
   column-gap: 14px;
   row-gap: 2px;
   font-size: 1.05rem;
 }
 .lines .when {
-  text-align: right;
+  text-align: end;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -183,7 +187,7 @@ main:focus { outline: none; }
 .cal-head span { padding: 4px 6px; font-weight: 700; color: var(--accent); font-size: 0.95rem; }
 .cal-grid {
   border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
+  border-inline-start: 1px solid var(--line);
   border-radius: 12px;
   overflow: hidden;
   background: var(--surface);
@@ -196,10 +200,10 @@ main:focus { outline: none; }
   min-height: 62px;
   padding: 6px 0 8px;
   border: 0;
-  border-right: 1px solid var(--line);
+  border-inline-end: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   background: transparent;
-  text-align: left;
+  text-align: start;
 }
 .cal-day .num {
   justify-self: start;
@@ -207,7 +211,7 @@ main:focus { outline: none; }
   place-items: center;
   min-width: 26px;
   height: 26px;
-  margin-left: 4px;
+  margin-inline-start: 4px;
   border-radius: 50%;
   font-size: 0.9rem;
   font-variant-numeric: tabular-nums;
@@ -236,7 +240,7 @@ main:focus { outline: none; }
   min-width: 0;
 }
 .card-title { margin: 0; font-size: 1.5rem; text-align: center; }
-.card-title.left { text-align: left; font-size: 1.25rem; }
+.card-title.left { text-align: start; font-size: 1.25rem; }
 
 .field { display: grid; gap: 6px; min-width: 0; margin: 0; padding: 0; border: 0; }
 .field > span, .field > legend { font-size: 0.85rem; color: var(--muted); padding: 0; }
@@ -262,6 +266,7 @@ select {
   background-repeat: no-repeat;
   padding-right: 40px;
 }
+[dir="rtl"] select { background-position: 14px 50%, 20px 50%; padding-right: 14px; padding-left: 40px; }
 textarea { resize: vertical; min-height: 96px; }
 input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
 
@@ -304,7 +309,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); ou
   border-radius: var(--radius);
   background: var(--surface);
   box-shadow: var(--shadow);
-  text-align: left;
+  text-align: start;
   text-decoration: none;
 }
 .item.link:active { background: var(--surface-2); }
@@ -332,8 +337,8 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); ou
 .post { display: grid; gap: 2px; }
 
 .search-field { position: relative; display: block; }
-.search-field .ic { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); }
-.search-field input { padding-left: 48px; background: var(--surface); border-radius: 999px; }
+.search-field .ic { position: absolute; inset-inline-start: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+.search-field input { padding-inline-start: 48px; background: var(--surface); border-radius: 999px; }
 
 .vehicle-row { display: flex; align-items: center; gap: 14px; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -364,12 +369,20 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); ou
 .photo-btn input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .preview { width: 100%; max-height: 240px; object-fit: cover; border-radius: 12px; }
 
-.segmented { display: flex; padding: 4px; gap: 4px; border-radius: 14px; background: var(--surface-2); }
-.seg-btn { flex: 1; min-height: 42px; border: 0; border-radius: 10px; background: transparent; font-weight: 700; color: var(--muted); }
-.seg-btn[aria-pressed="true"] { background: var(--surface); color: var(--fg); box-shadow: var(--shadow); }
+.lang-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+.lang-btn {
+  min-height: 48px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  font-size: 1rem;
+  font-weight: 600;
+}
+.lang-btn[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
 
 .prose { gap: 10px; }
-.prose ol { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; }
+.prose ol { margin: 0; padding-inline-start: 1.3em; display: grid; gap: 6px; }
 .prose p { margin: 0; }
 .defs { margin: 0; display: grid; gap: 4px; }
 .defs dt { font-weight: 700; margin-top: 8px; }
@@ -381,19 +394,19 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); ou
 .report-center { margin: 0; font-size: 0.85rem; color: var(--muted); font-weight: 700; }
 .table-wrap { overflow-x: auto; margin-inline: -20px; padding-inline: 20px; }
 table { width: 100%; border-collapse: collapse; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
-th, td { padding: 6px 8px; text-align: left; border-bottom: 1px solid var(--line); }
-th:first-child, td:first-child { padding-left: 0; }
-th:last-child, td:last-child { padding-right: 0; }
+th, td { padding: 6px 8px; text-align: start; border-bottom: 1px solid var(--line); }
+th:first-child, td:first-child { padding-inline-start: 0; }
+th:last-child, td:last-child { padding-inline-end: 0; }
 thead th { font-size: 0.75rem; color: var(--muted); font-weight: 700; white-space: nowrap; }
 tfoot th { border-bottom: 0; padding-top: 10px; }
-.num { text-align: right; white-space: nowrap; }
-.nowrap { white-space: nowrap; font-weight: 700; }
+.num { text-align: end; white-space: nowrap; }
+.day-cell { font-weight: 700; min-width: 4.5em; }
 tr.free td, tr.vacation td { color: var(--muted); }
 .duty { white-space: nowrap; }
 .duty-time { display: block; font-size: 0.75rem; color: var(--muted); }
 .summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 16px; margin: 0; font-variant-numeric: tabular-nums; }
 .summary dt { color: var(--muted); }
-.summary dd { margin: 0; text-align: right; }
+.summary dd { margin: 0; text-align: end; }
 .summary .strong { color: var(--fg); font-weight: 700; }
 
 /* ---------- Pestañas inferiores ---------- */
@@ -434,21 +447,23 @@ tr.free td, tr.vacation td { color: var(--muted); }
   position: fixed;
   top: 0;
   bottom: 0;
-  left: 0;
+  inset-inline-start: 0;
   z-index: 30;
   display: flex;
   flex-direction: column;
   gap: 4px;
   width: min(86vw, 340px);
   padding: calc(env(safe-area-inset-top, 0px) + 24px) 12px calc(env(safe-area-inset-bottom, 0px) + 16px);
-  padding-left: max(12px, env(safe-area-inset-left, 0px));
+  padding-inline-start: max(12px, env(safe-area-inset-left, 0px));
   background: var(--surface);
-  border-radius: 0 24px 24px 0;
+  border-start-end-radius: 24px;
+  border-end-end-radius: 24px;
   overflow-y: auto;
   transform: translateX(-105%);
   transition: transform 0.25s ease;
 }
 body.drawer-open .scrim { opacity: 1; pointer-events: auto; }
+[dir="rtl"] .drawer { transform: translateX(105%); }
 body.drawer-open .drawer { transform: none; }
 
 .brand { display: flex; align-items: center; gap: 10px; padding: 0 12px 8px; }
@@ -460,7 +475,7 @@ body.drawer-open .drawer { transform: none; }
 }
 .brand-name { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.01em; }
 .brand-badge {
-  margin-left: auto;
+  margin-inline-start: auto;
   padding: 2px 8px;
   border-radius: 6px;
   background: color-mix(in srgb, var(--vacation) 25%, transparent);
@@ -483,7 +498,7 @@ body.drawer-open .drawer { transform: none; }
   background: transparent;
   text-decoration: none;
   font-size: 1.05rem;
-  text-align: left;
+  text-align: start;
 }
 .drawer-item.active { background: var(--accent-soft); font-weight: 700; }
 .drawer-item:active { background: var(--surface-2); }

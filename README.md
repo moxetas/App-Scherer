@@ -1,6 +1,6 @@
 # MiTurno
 
-Prototipo de app de cuadrantes para conductores de autobús, en **español y alemán**. Se instala en el iPhone desde Safari, sin pasar por la App Store.
+Prototipo de app de cuadrantes para conductores de autobús, en **9 idiomas**: alemán, español, polaco, rumano, inglés, árabe, francés, portugués y japonés. Se instala en el iPhone desde Safari, sin pasar por la App Store.
 
 Es un proyecto independiente: no usa el nombre, el logotipo ni los datos de ninguna empresa. Todo lo que muestra son **datos de ejemplo inventados**.
 
@@ -15,7 +15,7 @@ Es un proyecto independiente: no usa el nombre, el logotipo ni los datos de ning
 | Partes de actividad | Ver el parte mensual con horas retribuidas, dietas y resumen para la nómina. |
 | Parte de daños | Elegir un vehículo por matrícula y avisar de un daño, con foto. |
 | Mensajes y tablón | Avisos personales y avisos para toda la plantilla. |
-| Ajustes | Cambiar el idioma (español / alemán) y poner tu nombre. |
+| Ajustes | Cambiar el idioma y poner tu nombre. La primera vez, la app se abre en el idioma del teléfono. |
 
 Lo que escribes (solicitudes, partes, tu nombre) se guarda solo en tu teléfono.
 
@@ -44,7 +44,9 @@ Es una web normal (HTML, CSS y JavaScript) sin librerías ni servidor:
 | --- | --- |
 | `index.html` | Estructura de la app. |
 | `styles.css` | Diseño, con modo claro y oscuro. |
-| `i18n.js` | **Todos los textos de la app en español y alemán.** |
+| `i18n.js` | Lista de idiomas disponibles. |
+| `lang/*.js` | **Todos los textos de la app, un archivo por idioma.** |
+| `tools/check-translations.js` | Comprueba que ningún idioma se ha dejado textos (`node tools/check-translations.js`). |
 | `data.js` | Datos de ejemplo: servicios, mensajes, vehículos… |
 | `app.js` | Pantallas y navegación. |
 | `sw.js` | Guarda la app en el teléfono para que abra sin cobertura. |
@@ -57,7 +59,10 @@ Para probarla en un ordenador basta con servir la carpeta, por ejemplo con `pyth
 
 La idea que demuestra este prototipo es que la app oficial podría ofrecer **varios idiomas** con un selector en los ajustes.
 
-- Todos los textos están separados del código en `i18n.js`, con una clave por texto (`'absence.type': 'Tipo de ausencia'`). Es el mismo sistema que usan Flutter (archivos `.arb`), Android (`strings.xml`) o iOS (`Localizable.strings`), así que las traducciones se pueden pasar a cualquiera de esos formatos.
-- Añadir un idioma nuevo (polaco, rumano, turco…) consiste en copiar el bloque `es` de `i18n.js` y traducir los valores.
-- Fechas, meses y números se formatean según el idioma con `Intl`, sin traducirlos a mano.
+- Todos los textos están separados del código, un archivo por idioma en `lang/`, con una clave por texto (`'absence.type': 'Tipo de ausencia'`). Es el mismo sistema que usan Flutter (archivos `.arb`), Android (`strings.xml`) o iOS (`Localizable.strings`), así que las traducciones se pueden pasar a cualquiera de esos formatos.
+- **Árabe**: la pantalla entera se da la vuelta (de derecha a izquierda): menú, flechas, tablas y calendario. Las horas usan cifras latinas para que coincidan con los horarios.
+- **Plurales**: cada idioma usa sus propias reglas («1 dzień / 2 dni» en polaco, «يومان» para dos días en árabe) mediante `Intl.PluralRules`.
+- Fechas, meses y euros se formatean según el idioma con `Intl` (por ejemplo «2026年11月» en japonés).
+- Añadir un idioma: copiar `lang/es.js`, traducirlo, añadir su código en `i18n.js` y cargarlo en `index.html` y `sw.js`. `tools/check-translations.js` avisa de cualquier texto que falte.
+- El portugués es de Portugal y el inglés, británico.
 - `data.js` es donde se conectaría la API real del sistema de planificación.

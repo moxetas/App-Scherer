@@ -5,8 +5,14 @@ const STORAGE_KEY = 'miturno.v1';
 
 // ---------- Estado guardado en el teléfono ----------
 
+// Primer arranque: el idioma del teléfono, si la app lo tiene
+function detectLanguage() {
+  const wanted = (navigator.languages || [navigator.language || '']).map((l) => String(l).slice(0, 2).toLowerCase());
+  return wanted.find((l) => LANGUAGES.includes(l)) || FALLBACK_LANGUAGE;
+}
+
 function freshState() {
-  return { lang: 'es', name: '', requests: [], damages: [], taken: [] };
+  return { lang: detectLanguage(), name: '', requests: [], damages: [], taken: [] };
 }
 
 function loadState() {
@@ -27,21 +33,25 @@ function saveState() {
 }
 
 let state = loadState();
+if (!LANGUAGES.includes(state.lang)) state.lang = FALLBACK_LANGUAGE;
 
 // ---------- Textos ----------
 
-function t(key, vars) {
-  const table = STRINGS[state.lang] || STRINGS.es;
-  let s = key in table ? table[key] : key in STRINGS.es ? STRINGS.es[key] : key;
-  if (typeof s === 'string' && vars) {
-    s = s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
-  }
-  return s;
+function fill(s, vars) {
+  return vars ? s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m)) : s;
 }
 
-// Texto de los datos de ejemplo, que vienen en los dos idiomas
-function L(obj) {
-  return obj[state.lang] || obj.es;
+function t(key, vars) {
+  const table = STRINGS[state.lang];
+  const s = key in table ? table[key] : key in STRINGS[FALLBACK_LANGUAGE] ? STRINGS[FALLBACK_LANGUAGE][key] : key;
+  return typeof s === 'string' ? fill(s, vars) : s;
+}
+
+// Plurales según las reglas de cada idioma: el polaco, el rumano o el árabe tienen más de dos formas
+function tCount(key, n) {
+  const forms = t(key);
+  const form = forms[new Intl.PluralRules(locale()).select(n)] || forms.other;
+  return fill(form, { n });
 }
 
 function esc(s) {
@@ -69,9 +79,11 @@ function isoWeek(d) {
   return Math.ceil(((x - yearStart) / 86400000 + 1) / 7);
 }
 
-function locale() { return LOCALES[state.lang]; }
+function locale() { return t('meta.locale'); }
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-function fmtDayMonth(d) { return pad(d.getDate()) + (state.lang === 'de' ? '.' : '/') + pad(d.getMonth() + 1); }
+function fmtDayMonth(d) {
+  return fill(t('format.dayMonth'), { dd: pad(d.getDate()), mm: pad(d.getMonth() + 1), d: d.getDate(), m: d.getMonth() + 1 });
+}
 function fmtLongDate(d) { return new Intl.DateTimeFormat(locale(), { day: 'numeric', month: 'long' }).format(d); }
 function fmtMonthYearInline(d) { return new Intl.DateTimeFormat(locale(), { month: 'long', year: 'numeric' }).format(d); }
 function fmtMonthYear(d) { return capitalize(fmtMonthYearInline(d)); }
@@ -90,7 +102,10 @@ function relDay(daysAgo) {
   return fmtLongDate(addDays(TODAY, -daysAgo));
 }
 
-function dayLabel(d) { return t('days.short')[weekdayIndex(d)] + ' ' + fmtDayMonth(d); }
+function dayLabel(d) { return t('format.dayLabel', { wd: t('days.short')[weekdayIndex(d)], date: fmtDayMonth(d) }); }
+
+// Mantiene el orden de signos y números dentro de un texto en árabe
+function ltr(s) { return `<span dir="ltr">${s}</span>`; }
 
 // ---------- Cuadrante de ejemplo ----------
 
@@ -138,8 +153,12 @@ const ICONS = {
   camera: 'M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z',
 };
 
+// Iconos con dirección: en árabe se ven en espejo
+const MIRRORED_ICONS = ['back', 'left', 'right', 'send', 'logout'];
+
 function icon(name) {
-  return `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICONS[name]}"/></svg>`;
+  const cls = MIRRORED_ICONS.includes(name) ? 'ic mirror' : 'ic';
+  return `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICONS[name]}"/></svg>`;
 }
 
 // ---------- Utilidades de pantalla ----------
@@ -156,7 +175,6 @@ function toast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
 }
 
-function plural(n, oneKey, manyKey) { return n === 1 ? t(oneKey) : t(manyKey, { n }); }
 
 // ---------- Cuadrante ----------
 
@@ -174,9 +192,9 @@ function dayCard(d, p) {
     <span class="badge service">${t('letter.service')}</span>
     <div class="lines">
       <span class="when">${dayLabel(d)}</span><span class="what strong">${t('roster.service', { n: p.id })}</span>
-      <span class="when"></span><span class="what">${esc(L(ROUTES_INFO[p.route]))}</span>
-      <span class="when">${p.start}</span><span class="what">${esc(L(PLACES[p.from]))}</span>
-      <span class="when">${p.end}</span><span class="what">${esc(L(PLACES[p.to]))}</span>
+      <span class="when"></span><span class="what">${esc(t('route.' + p.route))}</span>
+      <span class="when">${p.start}</span><span class="what">${esc(t('place.' + p.from))}</span>
+      <span class="when">${p.end}</span><span class="what">${esc(t('place.' + p.to))}</span>
     </div>
   </article>`;
 }
@@ -216,7 +234,7 @@ function renderCalendar() {
     if (d.getMonth() !== first.getMonth()) cls.push('out');
     if (key === dayKey(TODAY)) cls.push('today');
     if (key === selected) cls.push('selected');
-    const kindName = t('calendar.' + p.kind);
+    const kindName = p.kind === 'service' ? t('calendar.service') : t('roster.' + p.kind);
     cells += `<button type="button" class="${cls.join(' ')}" data-day="${key}" aria-label="${fmtLongDate(d)}, ${kindName}" aria-pressed="${key === selected}">
       <span class="num">${d.getDate()}</span><span class="bar ${p.kind}"></span>
     </button>`;
@@ -235,8 +253,8 @@ function renderCalendar() {
     <div class="cal-grid">${cells}</div>
     <div class="legend">
       <span><i class="bar service"></i>${t('calendar.service')}</span>
-      <span><i class="bar free"></i>${t('calendar.free')}</span>
-      <span><i class="bar vacation"></i>${t('calendar.vacation')}</span>
+      <span><i class="bar free"></i>${t('roster.free')}</span>
+      <span><i class="bar vacation"></i>${t('roster.vacation')}</span>
     </div>
   </div>
   <div class="stack cal-detail">${dayCard(sel, planFor(sel))}</div>`;
@@ -263,7 +281,7 @@ function renderAbsence() {
     return `<li class="item">
       <div class="item-main">
         <span class="item-title">${t('absence.type.' + r.type)}</span>
-        <span class="item-sub">${range} · ${plural(n, 'absence.day1', 'absence.dayN')}</span>
+        <span class="item-sub">${range} · ${tCount('absence.days', n)}</span>
         ${r.note ? `<span class="item-note">${esc(r.note)}</span>` : ''}
       </div>
       <span class="status">${t('absence.pending')}</span>
@@ -407,7 +425,7 @@ function renderReport(param) {
   const m = parseMonthParam(param);
   const { rows, sum } = monthReport(m.getFullYear(), m.getMonth());
   const body = rows.map((r) => `<tr class="${r.kind}">
-      <td class="nowrap">${dayLabel(r.d)}</td>
+      <td class="day-cell">${dayLabel(r.d)}</td>
       <td class="duty">${esc(r.duty)}${r.time ? `<span class="duty-time">${r.time}</span>` : ''}</td>
       <td class="num">${r.paid ? fmtMinutes(r.paid) : ''}</td>
       <td class="num">${r.diet ? fmtEuro(r.diet) : ''}</td>
@@ -434,7 +452,7 @@ function renderReport(param) {
     <dl class="summary">
       <dt>${t('report.target')}</dt><dd>${fmtMinutes(sum.target)}</dd>
       <dt>${t('report.paid')}</dt><dd>${fmtMinutes(sum.paid)}</dd>
-      <dt class="strong">${t('report.diff')}</dt><dd class="strong">${diff > 0 ? '+' : ''}${fmtMinutes(diff)}</dd>
+      <dt class="strong">${t('report.diff')}</dt><dd class="strong">${ltr((diff > 0 ? '+' : '') + fmtMinutes(diff))}</dd>
       <dt>${t('report.sunday')}</dt><dd>${fmtMinutes(sum.sunday)}</dd>
       <dt>${t('report.diets')}</dt><dd>${fmtEuro(sum.diets)}</dd>
       <dt>${t('report.vacationDays')}</dt><dd>${sum.vacationDays}</dd>
@@ -565,19 +583,19 @@ function renderMessages() {
   return `<ul class="list">${MESSAGES.map((m) => `<li><details class="item msg">
       <summary>
         <span class="item-main">
-          <span class="item-sub">${esc(L(m.from))} · ${relDay(m.daysAgo)}</span>
-          <span class="item-title">${esc(L(m.title))}</span>
+          <span class="item-sub">${esc(t('msg.' + m.id + '.from'))} · ${relDay(m.daysAgo)}</span>
+          <span class="item-title">${esc(t('msg.' + m.id + '.title'))}</span>
         </span>
       </summary>
-      <p>${esc(L(m.body))}</p>
+      <p>${esc(t('msg.' + m.id + '.body'))}</p>
     </details></li>`).join('')}</ul>`;
 }
 
 function renderBoard() {
   return `<ul class="list">${BOARD.map((b) => `<li class="item post">
       <span class="item-sub">${relDay(b.daysAgo)}</span>
-      <span class="item-title">${esc(L(b.title))}</span>
-      <p>${esc(L(b.body))}</p>
+      <span class="item-title">${esc(t('post.' + b.id + '.title'))}</span>
+      <p>${esc(t('post.' + b.id + '.body'))}</p>
     </li>`).join('')}</ul>`;
 }
 
@@ -586,10 +604,11 @@ function renderBoard() {
 let resetArmed = false;
 
 function renderSettings() {
-  const langs = Object.keys(STRINGS).map((k) => `<button type="button" class="seg-btn" data-lang="${k}" aria-pressed="${state.lang === k}">${LANGUAGE_NAMES[k]}</button>`).join('');
+  // Cada idioma aparece con su propio nombre y escritura, para que cualquiera encuentre el suyo
+  const langs = LANGUAGES.map((k) => `<button type="button" class="lang-btn" data-lang="${k}" lang="${k}" dir="${STRINGS[k]['meta.dir']}" aria-pressed="${state.lang === k}">${STRINGS[k]['meta.name']}</button>`).join('');
   return `<section class="card form">
       <div class="field"><span id="lang-label">${t('settings.language')}</span>
-        <div class="segmented" role="group" aria-labelledby="lang-label">${langs}</div>
+        <div class="lang-grid" role="group" aria-labelledby="lang-label">${langs}</div>
       </div>
       <label class="field"><span>${t('settings.name')}</span>
         <input type="text" id="set-name" value="${esc(state.name)}" placeholder="${t('settings.namePh')}" autocomplete="given-name">
@@ -628,7 +647,13 @@ function bindSettings() {
 
 function renderHelp() {
   const steps = t('help.install').map((s) => `<li>${s}</li>`).join('');
-  const sections = t('help.sections').map(([title, text]) => `<dt>${title}</dt><dd>${text}</dd>`).join('');
+  const sections = [
+    ['nav.roster', 'help.text.roster'],
+    ['menu.absence', 'help.text.absence'],
+    ['menu.exchange', 'help.text.exchange'],
+    ['menu.reports', 'help.text.reports'],
+    ['menu.damage', 'help.text.damage'],
+  ].map(([title, text]) => `<dt>${t(title)}</dt><dd>${t(text)}</dd>`).join('');
   return `<section class="card prose">
       <h2 class="section-title">${t('help.installTitle')}</h2>
       <ol>${steps}</ol>
@@ -647,16 +672,16 @@ function renderHelp() {
 
 const ROUTES = {
   cuadrante: { title: () => t('nav.roster'), tab: true, actions: ['calendar', 'refresh'], view: renderRoster },
-  mensajes: { title: () => t('messages.title'), tab: true, view: renderMessages },
+  mensajes: { title: () => t('nav.messages'), tab: true, view: renderMessages },
   tablon: { title: () => t('board.title'), tab: true, view: renderBoard },
-  calendario: { title: () => t('calendar.title'), parent: 'cuadrante', view: renderCalendar, bind: bindCalendar },
+  calendario: { title: () => t('action.calendar'), parent: 'cuadrante', view: renderCalendar, bind: bindCalendar },
   ausencias: { title: () => t('absence.title'), view: renderAbsence, bind: bindAbsence },
-  bolsa: { title: () => t('exchange.title'), view: renderExchange, bind: bindExchange },
-  partes: { title: () => t('reports.title'), view: renderReports },
-  parte: { title: () => t('reports.title'), parent: 'partes', view: renderReport },
-  danos: { title: () => t('damage.title'), view: renderDamage, bind: bindDamage },
-  ajustes: { title: () => t('settings.title'), view: renderSettings, bind: bindSettings },
-  ayuda: { title: () => t('help.title'), view: renderHelp },
+  bolsa: { title: () => t('menu.exchange'), view: renderExchange, bind: bindExchange },
+  partes: { title: () => t('menu.reports'), view: renderReports },
+  parte: { title: () => t('menu.reports'), parent: 'partes', view: renderReport },
+  danos: { title: () => t('menu.damage'), view: renderDamage, bind: bindDamage },
+  ajustes: { title: () => t('menu.settings'), view: renderSettings, bind: bindSettings },
+  ayuda: { title: () => t('menu.help'), view: renderHelp },
 };
 
 const TABS = [
@@ -700,6 +725,7 @@ function renderChrome() {
   const { name, param } = parseHash();
   const route = ROUTES[name];
   document.documentElement.lang = state.lang;
+  document.documentElement.dir = t('meta.dir');
   document.title = 'MiTurno · ' + route.title(param);
   $('#title').textContent = route.title(param);
 

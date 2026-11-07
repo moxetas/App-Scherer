@@ -1,11 +1,20 @@
 // Guarda la app en el teléfono para que abra aunque no haya cobertura.
 // Cambia el número de CACHE cada vez que se publique una versión nueva.
-const CACHE = 'miturno-v1';
+const CACHE = 'miturno-v2';
 const FILES = [
   './',
   'index.html',
   'styles.css',
   'i18n.js',
+  'lang/de.js',
+  'lang/es.js',
+  'lang/pl.js',
+  'lang/ro.js',
+  'lang/en.js',
+  'lang/ar.js',
+  'lang/fr.js',
+  'lang/pt.js',
+  'lang/ja.js',
   'data.js',
   'app.js',
   'manifest.webmanifest',
